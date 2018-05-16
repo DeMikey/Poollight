@@ -47,8 +47,8 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 					[2, $this->Translate('Green'), '', 0x3ADF00],
 					[3, $this->Translate('Blue'), '', 0x0000FF],
 					[4, $this->Translate('Cyan'), '', 0x66FFFF],
-					[5, $this->Translate('Yellow'), '', 0xFFFF00]
-					[6, $this->Translate('Mangenta'), '', 0xFF00CC]
+					[5, $this->Translate('Yellow'), '', 0xFFFF00],
+					[6, $this->Translate('Mangenta'), '', 0xFF00CC],
 					[7, $this->Translate('None'), '', -1]
 				]
 			);
@@ -68,10 +68,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 					[9, $this->Translate('Rivera'), 'Welness', -1],
 					[10, $this->Translate('Colorfull'), 'Stars', -1],
 					[11, $this->Translate('Rainbow'), 'Sun', -1],
-					[12, $this->Translate('River of Color'), 'Fog', -1]
-					[13, $this->Translate('Disco'), 'Image', -1]
-					[14, $this->Translate('Four Saison'), 'Flower', -1]
-					[15, $this->Translate('Party'), 'Coctail', -1]
+					[12, $this->Translate('River of Color'), 'Fog', -1],
+					[13, $this->Translate('Disco'), 'Image', -1],
+					[14, $this->Translate('Four Saison'), 'Flower', -1],
+					[15, $this->Translate('Party'), 'Coctail', -1],
 					[16, $this->Translate('None'), '', -1]
 				]
 			);
