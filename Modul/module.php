@@ -25,6 +25,9 @@ define('__ROOT__', dirname(dirname(__FILE__)));
  
 			$this->RegisterPropertyString('url', '');
 			$this->RegisterPropertyBoolean('connected', false);
+			$this->RegisterPropertyBoolean('Power', false);
+			$this->RegisterPropertyInteger('Color', 7);
+ 			$this->RegisterPropertyInteger('Scene', 16);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -81,8 +84,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->EnableAction('Color');
 			$this->RegisterVariableInteger('Scene', $this->Translate('Scene'), 'PoolLight.Scene', $this->_getPosition());
 			$this->EnableAction('Scene');
-
-       }
+		}
 		
 		private function httpPost($url, $data)
 		{
@@ -102,22 +104,58 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         * ABC_MeineErsteEigeneFunktion($id);
         *
         */
-        public function ChangeColor()
+        public function SetColor(int $ColorCode)
 		{
-            // Selbsterstellter Code
+			$Url = $this->ReadPropertyString('url') . '2.html';
+			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
+		  	$this->httpPost ($Url, $Cmd);
+		}
+        
+		public function SetPower(bool $Power)
+		{
+			$Url = $this->ReadPropertyString('url') . 'HTMCUInfo';
+			if ($Power)
+				{$Cmd = array('B1' => 'Turn on the light');}
+			else
+				{$Cmd = array('B5' => 'Switch to next show');}
+		  	$this->httpPost ($Url, $Cmd);
         }
-        public function PowerOn()
+        
+		public function SetScene(int $Scene)
 		{
-            // Selbsterstellter Code
-        }
-        public function PowerOff()
-		{
-            // Selbsterstellter Code
-        }
-        public function ChangeScene()
-		{
-            // Selbsterstellter Code
+			$Url = $this->ReadPropertyString('url') . '2.html';
+			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $Scene));
+		  	$this->httpPost ($Url, $Cmd);
         }		
+
+		public function Connect(string $url)
+		{
+			$Url = $this->ReadPropertyString('url') . '2.html';
+        }		
+
+		/**
+		* webfront request actions
+		* @param string $Ident
+		* @param $Value
+		* @return bool|void
+		*/
+		public function RequestAction($Ident, $Value)
+		{
+			switch ($Ident) {
+				case 'power':
+					$this->Set_DND($Value);
+					break;
+				case 'color':
+					$this->SetColor($Value);
+					break;
+				case 'scene':
+					$this->Set_DND_EndInt($Value);
+					break;
+				default:
+					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
+			}
+		}
+
 		/**
 		* register profiles
 		* @param $Name
@@ -179,6 +217,28 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		}
 		
 		/**
+		* send debug log
+		* @param string $notification
+		* @param string $message
+		* @param int $format 0 = Text, 1 = Hex
+		*/
+		private function _debug(string $notification = NULL, string $message = NULL, $format = 0)
+		{
+			$this->SendDebug($notification, $message, $format);
+		}
+		
+		/**
+		* check for variable and set value
+		* @param $ident
+		* @param $value
+		*/
+		private function SetPoolLightValue($ident, $value)
+		{
+			if (@$this->GetIDForIdent($ident))
+				$this->SetValue($ident, $value);
+		}
+		
+		/**
 		* return incremented position
 		* @return int
 		*/
@@ -186,6 +246,23 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		{
 			$this->position++;
 			return $this->position;
+		}
+
+		/***********************************************************
+		* Migrations
+		***********************************************************/
+
+		/**
+		* Polyfill for IP-Symcon 4.4 and older
+		* @param $Ident
+		* @param $Value
+		*/
+		protected function SetValue($Ident, $Value)
+		{
+			if (IPS_GetKernelVersion() >= 5) {
+				parent::SetValue($Ident, $Value);
+			} else if ($id = @$this->GetIDForIdent($Ident)) {
+				SetValue($id, $Value);
 		}
   }
 ?>

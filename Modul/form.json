@@ -6,7 +6,6 @@
     ],
     "actions":
     [
-        { "type": "ValidationTextBox", "name": "url", "caption": "Wifi Controler Url" },
         { "type": "Button", "label": "Connect Controler", "onClick": "Connect($url);" }
     ],
     "status":

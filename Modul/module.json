@@ -3,9 +3,9 @@
     "name": "Pool Light Controler",
     "type": 3,
     "vendor": "Huntech",
-    "aliases": ["Pool Light Controler"],
+    "aliases": ["PoolLightControler"],
     "parentRequirements": [],
     "childRequirements": [],
     "implemented": [],
-    "prefix": "PoollightControler"
+    "prefix": "PoolLight"
 }
