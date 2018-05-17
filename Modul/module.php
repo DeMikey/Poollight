@@ -141,6 +141,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		*/
 		public function RequestAction($Ident, $Value)
 		{
+			$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
 			switch ($Ident) {
 				case 'Power':
 					$this->SetPower($Value);
@@ -153,6 +154,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
+					throw new Exception("Invalid Ident" . $Ident);
 			}
 		}
 
