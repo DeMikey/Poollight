@@ -27,7 +27,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->RegisterPropertyBoolean('connected', false);
 			$this->RegisterPropertyBoolean('Power', false);
 			$this->RegisterPropertyInteger('Color', 7);
- 			$this->RegisterPropertyInteger('Scene', 16);
+ 			$this->RegisterPropertyInteger('Scene', 15);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -142,13 +142,13 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		public function RequestAction($Ident, $Value)
 		{
 			switch ($Ident) {
-				case 'power':
+				case 'Power':
 					$this->SetPower($Value);
 					break;
-				case 'color':
+				case 'Color':
 					$this->SetColor($Value);
 					break;
-				case 'scene':
+				case 'Scene':
 					$this->SetScene($Value);
 					break;
 				default:
