@@ -26,8 +26,8 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->RegisterPropertyString('url', '');
 			$this->RegisterPropertyBoolean('connected', false);
 			$this->RegisterPropertyBoolean('Power', false);
-			$this->RegisterPropertyInteger('Color', 7);
- 			$this->RegisterPropertyInteger('Scene', 15);
+			$this->RegisterPropertyInteger('Color', 6);
+ 			$this->RegisterPropertyInteger('Scene', 2);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -84,6 +84,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->EnableAction('Color');
 			$this->RegisterVariableInteger('Scene', $this->Translate('Scene'), 'PoolLight.Scene', $this->_getPosition());
 			$this->EnableAction('Scene');
+			$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
 		}
 		
 		private function httpPost($url, $data)
