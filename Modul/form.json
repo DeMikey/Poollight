@@ -6,7 +6,7 @@
     ],
     "actions":
     [
-        { "type": "Button", "label": "Connect Controler", "onClick": "Connect($url);" }
+        { "type": "Button", "label": "Connect Controler", "onClick": "HPL_Connect($url);" }
     ],
     "status":
     [

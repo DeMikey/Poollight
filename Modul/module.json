@@ -2,10 +2,10 @@
     "id": "{2ace3977-dcc5-4db4-9d38-e38f857bf1f7}",
     "name": "Pool Light Controler",
     "type": 3,
-    "vendor": "Huntech",
-    "aliases": ["PoolLightControler"],
+    "vendor": "Hentech",
+    "aliases": ["Pool Light Controler"],
     "parentRequirements": [],
     "childRequirements": [],
     "implemented": [],
-    "prefix": "PoolLight"
+    "prefix": "HPLC"
 }
