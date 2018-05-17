@@ -84,7 +84,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->EnableAction('Color');
 			$this->RegisterVariableInteger('Scene', $this->Translate('Scene'), 'PoolLight.Scene', $this->_getPosition());
 			$this->EnableAction('Scene');
-			$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
+			$this->_debug('request action', 'Varaiable INIT');
 		}
 		
 		private function httpPost($url, $data)
