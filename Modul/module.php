@@ -108,7 +108,9 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
-		  	$this->httpPost ($Url, $Cmd);
+		  	$Response = $this->httpPost ($Url, $Cmd);
+			$this->_debug('HTTPResponse', $Response);
+
 		}
         
 		public function SetPower(bool $Power)
@@ -154,10 +156,10 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 				case 'Scene':
 					$this->SetScene($Value);
 					$this->SetValue($Ident, $Value);
+					$this->SetValue('Color', 7);
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
-					throw new Exception("Invalid Ident" . $Ident);
 			}
 		}
 
