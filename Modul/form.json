@@ -6,7 +6,7 @@
     ],
     "actions":
     [
-        { "type": "Button", "label": "Connect Controler", "onClick": "HPL_Connect($url);" }
+        { "type": "Button", "label": "Connect Controler", "onClick": "HPLC_Connect($url);" }
     ],
     "status":
     [
