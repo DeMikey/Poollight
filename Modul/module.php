@@ -141,8 +141,6 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		*/
 		public function RequestAction($Ident, $Value)
 		{
-			echo $Ident;
-			$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
 			switch ($Ident) {
 				case 'Power':
 					$this->SetValue($Ident, $Value);
@@ -150,9 +148,12 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 					break;
 				case 'Color':
 					$this->SetColor($Value);
+					$this->SetValue($Ident, $Value);
+					$this->SetValue('Scene', 17);
 					break;
 				case 'Scene':
 					$this->SetScene($Value);
+					$this->SetValue($Ident, $Value);
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
