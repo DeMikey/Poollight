@@ -3,7 +3,7 @@
 define('__ROOT__', dirname(dirname(__FILE__)));
 
     // Klassendefinition
-    class PoolLight extends IPSModule {
+    class PoolLightControler extends IPSModule {
  
 		// helper properties
 		private $position = 0;
