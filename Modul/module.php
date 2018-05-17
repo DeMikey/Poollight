@@ -143,13 +143,13 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		{
 			switch ($Ident) {
 				case 'power':
-					$this->Set_DND($Value);
+					$this->SetPower($Value);
 					break;
 				case 'color':
 					$this->SetColor($Value);
 					break;
 				case 'scene':
-					$this->Set_DND_EndInt($Value);
+					$this->SetScene($Value);
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
@@ -263,6 +263,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 				parent::SetValue($Ident, $Value);
 			} else if ($id = @$this->GetIDForIdent($Ident)) {
 				SetValue($id, $Value);
+			}
 		}
   }
 ?>
