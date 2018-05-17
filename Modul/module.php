@@ -145,6 +145,7 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
 			switch ($Ident) {
 				case 'Power':
+					$this->SetValue($Ident, $Value);
 					$this->SetPower($Value);
 					break;
 				case 'Color':
