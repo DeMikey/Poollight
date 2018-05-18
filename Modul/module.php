@@ -259,11 +259,14 @@
 		public function GetState()
 		{
             $Curl = curl_init($this->ReadPropertyString('url'));
+            curl_setopt($Curl, CURLOPT_NOSIGNAL, 1);
+            curl_setopt($Curl, CURLOPT_TIMEOUT_MS, 200);
             curl_exec($Curl);
             // Check if any error occurred
             if ( curl_errno($Curl) > 0)
             {
                 $this->SetPoolLightValue( 'State', false );
+                $this->SetPoolLightValue( 'Power', false );
                 curl_close( $Curl );
                 return false;
             }
