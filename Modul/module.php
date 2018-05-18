@@ -2,8 +2,8 @@
 	// set base dir
 	define('__ROOT__', dirname(dirname(__FILE__)));
 
-    // Klassendefinition
-    class PoolLightControler extends IPSModule {
+    class PoolLightControler extends IPSModule 
+	{
  
 		// helper properties
 		private $position = 0;
@@ -13,8 +13,8 @@
 
         // Der Konstruktor des Moduls
         // Überschreibt den Standard Kontruktor von IPS
-        public function __construct($InstanceID) {
-            // Diese Zeile nicht löschen
+        public function __construct($InstanceID) 
+		{
             parent::__construct($InstanceID);
  
             // Selbsterstellter Code
@@ -256,7 +256,7 @@
 		public function GetState()
 		{
 			$Url = $this->ReadPropertyString('url');
-			$response = http_get("http://www.example.com/", array("timeout"=>1), $info);
+			$response = http_get($Url, array('timeout' => 1), $info);
 			print_r($info);
 			if ($info['response_code'] <> 200)
 			{
@@ -265,7 +265,7 @@
 			}
 			$this->SetPoolLightValue('State', false);
 			return true;
-        }		
+		}		
 
 		/**
 		* webfront request actions
@@ -283,12 +283,12 @@
 				case 'Color':
 					$this->SetColor($Value);
 					$this->SetPoolLightValue($Ident, $Value);
-					$this->SetPoolLightValue('Scene', $SceneNone);
+					$this->SetPoolLightValue('Scene', $this->SceneNone);
 					break;
 				case 'Scene':
 					$this->SetScene($Value);
 					$this->SetPoolLightValue($Ident, $Value);
-					$this->SetPoolLightValue('Color', $ColorNone);
+					$this->SetPoolLightValue('Color', $this->ColorNone);
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
@@ -470,9 +470,10 @@
 			return $form;
 		}
 
-
-
-
+        /******************************************************
+         * Helper Functions
+         ******************************************************/
+        
 		/**
 		* send debug log
 		* @param string $notification
