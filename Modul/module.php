@@ -2,7 +2,10 @@
 	// set base dir
 	define('__ROOT__', dirname(dirname(__FILE__)));
 
-    class PoolLightControler extends IPSModule 
+	// load ips constants
+    require_once(__ROOT__ . '/libs/ips.constants.php');
+
+    class PoolLightControler extends IPSModule
 	{
  
 		// helper properties
