@@ -1,12 +1,14 @@
 <?php
-// set base dir
-define('__ROOT__', dirname(dirname(__FILE__)));
+	// set base dir
+	define('__ROOT__', dirname(dirname(__FILE__)));
 
     // Klassendefinition
     class PoolLightControler extends IPSModule {
  
 		// helper properties
 		private $position = 0;
+		private $ColorNone = 7;
+		private $SceneNone = 17;
 
 
         // Der Konstruktor des Moduls
@@ -19,21 +21,39 @@ define('__ROOT__', dirname(dirname(__FILE__)));
         }
  
         // Überschreibt die interne IPS_Create($id) Funktion
-        public function Create() {
-            // Diese Zeile nicht löschen.
+        public function Create() 
+		{
             parent::Create();
  
-			$this->RegisterPropertyString('url', '');
+			$this->RegisterPropertyString('url', 'http://');
 			$this->RegisterPropertyBoolean('connected', false);
-			$this->RegisterPropertyBoolean('Power', false);
-			$this->RegisterPropertyInteger('Color', 6);
- 			$this->RegisterPropertyInteger('Scene', 2);
+			// register update timer
+			$this->RegisterPropertyInteger('UpdateInterval', 15);
+			$this->RegisterTimer('PoolLightTimerUpdate', 0, 'HPLC_GetState(' . $this->InstanceID . ');');
+			// register kernel messages
+			$this->RegisterMessage(0, IPS_KERNELMESSAGE);
         }
  
         // Überschreibt die intere IPS_ApplyChanges($id) Funktion
-        public function ApplyChanges() {
-            // Diese Zeile nicht löschen
+        public function ApplyChanges() 
+		{
             parent::ApplyChanges();
+
+			$this->RegisterProfileAssociation(
+				'PoolLight.State',
+				'Network',
+				'',
+				'',
+				0,
+				1,
+				0,
+				0,
+				0,
+				[
+					[0, 'Offline', '', 0xFF0000],
+					[1, 'Online', '', 0x3ADF00],
+				]
+			);
 			$this->RegisterProfileAssociation(
 				'PoolLight.Color',
 				'Execute',
@@ -78,14 +98,105 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 					[16, $this->Translate('None'), '', -1]
 				]
 			);
+ 			$this->RegisterVariableBoolean('State', $this->Translate('State'), 'PoolLight.State', $this->_getPosition());
  			$this->RegisterVariableBoolean('Power', $this->Translate('Power'), '~Switch', $this->_getPosition());
 			$this->EnableAction('Power');
 			$this->RegisterVariableInteger('Color', $this->Translate('Color'), 'PoolLight.Color', $this->_getPosition());
 			$this->EnableAction('Color');
 			$this->RegisterVariableInteger('Scene', $this->Translate('Scene'), 'PoolLight.Scene', $this->_getPosition());
 			$this->EnableAction('Scene');
+
+			// receive data only for this instance
+			$this->SetReceiveDataFilter('.*"InstanceID":' . $this->InstanceID . '.*');
+
+			// run only, when kernel is ready
+			if (IPS_GetKernelRunlevel() == KR_READY) 
+			{
+				// validate configuration
+				$valid_config = $this->ValidateConfiguration(true);
+				// set interval
+				$this->SetUpdateIntervall($valid_config);
+			}
 		}
 		
+		/**
+		* validate configuration
+		* @param bool $extended_validation
+		* @return bool
+		*/
+		private function ValidateConfiguration($extended_validation = false)
+		{
+			// check if configuration is complete
+			if (!$this->CheckConfiguration()) 
+			{
+				$this->SetStatus(201);
+				return false;
+			}
+
+			// read properties
+			$url = $this->ReadPropertyString('url');
+
+			// check for valid ip address
+			if (filter_var($url, FILTER_VALIDATE_URL) === false)
+			{
+				$this->SetStatus(203);
+				return false;
+			}
+
+			// ping ip
+			/*
+			if (!Sys_Ping($ip, 1000)) 
+			{
+				$this->SetStatus(203);
+				return false;
+			}
+			*/
+
+			// get online status
+
+			if ($extended_validation) 
+			{
+
+			}
+			// yay, configuration is valid! =)
+			$this->SetStatus(102);
+			return true;
+		}
+
+		/**
+		* set / unset update interval
+		* @param bool $enable
+		*/
+		protected function SetUpdateIntervall($enable = true)
+		{
+			$interval = $enable ? ($this->ReadPropertyInteger('UpdateInterval') * 1000) : 0;
+			$this->SetTimerInterval('PoolLightTimerUpdate', $interval);
+		}
+
+		/**
+		* Handle Kernel Messages
+		* @param int $TimeStamp
+		* @param int $SenderID
+		* @param int $Message
+		* @param array $Data
+		* @return bool|void
+		*/
+		public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+		{
+			if ($Message == IPS_KERNELMESSAGE && $Data[0] == KR_READY) 
+			{
+				// validate configuration & set interval
+				$valid_config = $this->ValidateConfiguration();
+				$this->SetUpdateIntervall($valid_config);
+			}
+		}
+
+		/**
+		* httpPost
+		* @param string $Url
+		* @param array $Data
+		* @return Object $Result
+		*/
 		private function httpPost($url, $data)
 		{
 			$curl = curl_init($url);
@@ -97,22 +208,24 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			return $response;
 		}
 
-        /**
-        * Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-        * Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wiefolgt zur Verfügung gestellt:
-        *
-        * ABC_MeineErsteEigeneFunktion($id);
-        *
-        */
+ 		/**
+		* SetColor
+		* @param int $ColorCode
+		* @return void
+		*/
         public function SetColor(int $ColorCode)
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
 		  	$Response = $this->httpPost ($Url, $Cmd);
 			$this->_debug('HTTPResponse', $Response);
-
 		}
-        
+ 
+ 		/**
+		* SetPower
+		* @param bool $Power
+		* @return void
+		*/
 		public function SetPower(bool $Power)
 		{
 			$Url = $this->ReadPropertyString('url') . 'HTMCUInfo';
@@ -123,6 +236,11 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		  	$this->httpPost ($Url, $Cmd);
         }
         
+ 		/**
+		* SetScene
+		* @param int $Scene
+		* @return void
+		*/
 		public function SetScene(int $Scene)
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
@@ -130,9 +248,23 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		  	$this->httpPost ($Url, $Cmd);
         }		
 
-		public function Connect(string $url)
+ 		/**
+		* GetState
+		* @param none
+		* @return bool
+		*/
+		public function GetState()
 		{
-			$Url = $this->ReadPropertyString('url') . '2.html';
+			$Url = $this->ReadPropertyString('url');
+			$response = http_get("http://www.example.com/", array("timeout"=>1), $info);
+			print_r($info);
+			if ($info['response_code'] <> 200)
+			{
+				$this->SetPoolLightValue('State', true);
+				return false;
+			}
+			$this->SetPoolLightValue('State', false);
+			return true;
         }		
 
 		/**
@@ -145,18 +277,18 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 		{
 			switch ($Ident) {
 				case 'Power':
-					$this->SetValue($Ident, $Value);
+					$this->SetPoolLightValue($Ident, $Value);
 					$this->SetPower($Value);
 					break;
 				case 'Color':
 					$this->SetColor($Value);
-					$this->SetValue($Ident, $Value);
-					$this->SetValue('Scene', 17);
+					$this->SetPoolLightValue($Ident, $Value);
+					$this->SetPoolLightValue('Scene', $SceneNone);
 					break;
 				case 'Scene':
 					$this->SetScene($Value);
-					$this->SetValue($Ident, $Value);
-					$this->SetValue('Color', 7);
+					$this->SetPoolLightValue($Ident, $Value);
+					$this->SetPoolLightValue('Color', $ColorNone);
 					break;
 				default:
 					$this->_debug('request action', 'Invalid $Ident <' . $Ident . '>');
@@ -223,6 +355,124 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 			}
 		}
 		
+		/**
+		* checks, if configuration is complete
+		* @return bool
+		*/
+		private function CheckConfiguration()
+		{
+			// configuration is not finished
+			if (!$this->ReadPropertyString('url')) 
+			{
+				return false;
+			}
+			return true;
+		}
+
+		/***********************************************************
+		* Configuration Form
+		***********************************************************/
+
+		/**
+		* build configuration form
+		* @return string
+		*/
+
+		public function GetConfigurationForm()
+		{
+			// update status, when configuration is not complete
+			if (!$this->CheckConfiguration()) 
+			{
+				$this->SetStatus(201);
+			}
+			// return current form
+			return json_encode([
+				'elements' => $this->FormHead(),
+				'actions' => $this->FormActions(),
+				'status' => $this->FormStatus()
+			]);
+		}
+	
+		/**
+		* return form configurations on configuration step
+		* @return array
+		*/
+		protected function FormHead()
+		{
+			$form = [
+						[
+							'type' => 'Label',
+							'label' => 'Enter the Wifi Controler Url below.'
+						],
+						[
+							'name' => 'url',
+							'type' => 'ValidationTextBox',
+							'caption' => 'Wifi Controler Url"'
+						],
+					];
+			return $form;
+		}
+
+		/**
+		* return form actions by token
+		* @return array
+		*/
+		protected function FormActions()
+		{
+			$form = [
+						[
+							'type' => 'Button',
+							'label' => 'Connect Controler',
+							'onClick' => 'HPLC_Connect($id);'
+						]
+					];
+			return $form;
+		}
+
+		/**
+		* return from status
+		* @return array
+		*/
+		protected function FormStatus()
+		{
+			$form = [
+				[
+					'code' => 101,
+					'icon' => 'inactive',
+					'caption' => 'Creating instance.'
+				],
+				[
+					'code' => 102,
+					'icon' => 'active',
+					'caption' => 'Roborock created.'
+				],
+				[
+					'code' => 104,
+					'icon' => 'inactive',
+					'caption' => 'interface closed.'
+				],
+				[
+					'code' => 201,
+					'icon' => 'inactive',
+					'caption' => 'Please follow the instructions.'
+				],
+				[
+					'code' => 202,
+					'icon' => 'error',
+					'caption' => 'IP address must not empty.'
+				],
+				[
+					'code' => 203,
+					'icon' => 'error',
+					'caption' => 'No valid IP address.'
+				]
+			];
+			return $form;
+		}
+
+
+
+
 		/**
 		* send debug log
 		* @param string $notification

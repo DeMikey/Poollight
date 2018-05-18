@@ -2,9 +2,11 @@
 	"translations": {
 		"de": {
 			"Wifi Controler URL": "Wifi Kontroller URL",
+			"Enter the Wifi Controler Url below.": "Bitte tragen sie die URL des Wifi Controlers ein",
 			"Color": "Farben",
 			"Scene": "Szenen",
 			"Power": "Power",
+			"State": "Status",
 			"On": "An",
 			"Off": "Aus",
 			"None": "Keine",
@@ -15,7 +17,7 @@
 			"Cyan": "Hellblau",
 			"Yellow": "Gelb",
 			"Mangenta": "Rosa",
-			"Evening Sea": "Sonnenunetragng am Meer",
+			"Evening Sea": "Sonnenuntergang am Meer",
 			"Evening River": "Abendlicher Fluss",
 			"Rivera": "Rivera",
 			"Colorfull": "Farbenfroh",

@@ -1,15 +1,1 @@
-{
-    "elements":
-    [
-        { "type": "ValidationTextBox", "name": "url", "caption": "Wifi Controler Url" }
- 
-    ],
-    "actions":
-    [
-        { "type": "Button", "label": "Connect Controler", "onClick": "HPLC_Connect($url);" }
-    ],
-    "status":
-    [
-        { "code": 200, "icon": "active", "caption": "Connect successful" }
-    ]
-}
+{}
