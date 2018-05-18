@@ -263,13 +263,13 @@
             // Check if any error occurred
             if ( curl_errno($Curl) > 0)
             {
-                $this->SetPoolLightValue( 'State', true );
+                $this->SetPoolLightValue( 'State', false );
                 curl_close( $Curl );
                 return false;
             }
             // Close handle
             curl_close($Curl);
-			$this->SetPoolLightValue('State', false);
+			$this->SetPoolLightValue('State', true);
 			return true;
 		}		
 
