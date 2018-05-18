@@ -213,7 +213,7 @@
 		* @param int $ColorCode
 		* @return void
 		*/
-        public function SetColor($ColorCode)
+ 		public function SetColor($ColorCode)
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
@@ -246,7 +246,7 @@
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $Scene));
 			$this->httpPost ($Url, $Cmd);
-        }		
+		}
 
  		/**
 		* GetState
@@ -258,11 +258,11 @@
             $Curl = curl_init($this->ReadPropertyString('url'));
             curl_exec($Curl);
             // Check if any error occurred
-            if (curl_errno($Curl) > 0)
+            if ( curl_errno($Curl) > 0)
             {
-			    $this->SetPoolLightValue('State', true);
-                curl_close($Curl);
-			    return false;
+                $this->SetPoolLightValue( 'State', true );
+                curl_close( $Curl );
+                return false;
             }
             // Close handle
             curl_close($Curl);
@@ -312,7 +312,8 @@
 		*/
 		protected function RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype)
 		{
-			if (!IPS_VariableProfileExists($Name)) {
+			if (!IPS_VariableProfileExists($Name))
+			{
 				IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
 			} else {
 				$profile = IPS_GetVariableProfile($Name);
