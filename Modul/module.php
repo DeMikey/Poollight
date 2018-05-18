@@ -213,7 +213,7 @@
 		* @param int $ColorCode
 		* @return void
 		*/
-        public function SetColor(int $ColorCode)
+        public function SetColor($ColorCode)
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
@@ -226,7 +226,7 @@
 		* @param bool $Power
 		* @return void
 		*/
-		public function SetPower(bool $Power)
+		public function SetPower($Power)
 		{
 			$Url = $this->ReadPropertyString('url') . 'HTMCUInfo';
 			if ($Power)
@@ -241,11 +241,11 @@
 		* @param int $Scene
 		* @return void
 		*/
-		public function SetScene(int $Scene)
+		public function SetScene($Scene)
 		{
 			$Url = $this->ReadPropertyString('url') . '2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $Scene));
-		  	$this->httpPost ($Url, $Cmd);
+			$this->httpPost ($Url, $Cmd);
         }		
 
  		/**
@@ -255,14 +255,17 @@
 		*/
 		public function GetState()
 		{
-			$Url = $this->ReadPropertyString('url');
-			$response = http_get($Url, array('timeout' => 1), $info);
-			print_r($info);
-			if ($info['response_code'] <> 200)
-			{
-				$this->SetPoolLightValue('State', true);
-				return false;
-			}
+            $Curl = curl_init($this->ReadPropertyString('url'));
+            curl_exec($Curl);
+            // Check if any error occurred
+            if (curl_errno($Curl) > 0)
+            {
+			    $this->SetPoolLightValue('State', true);
+                curl_close($Curl);
+			    return false;
+            }
+            // Close handle
+            curl_close($Curl);
 			$this->SetPoolLightValue('State', false);
 			return true;
 		}		
@@ -473,7 +476,7 @@
         /******************************************************
          * Helper Functions
          ******************************************************/
-        
+
 		/**
 		* send debug log
 		* @param string $notification
