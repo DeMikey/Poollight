@@ -266,6 +266,7 @@
             // Check if any error occurred
             if ( curl_errno($Curl) > 0)
             {
+                $this->SetPower(false);
                 $this->SetPoolLightValue( 'State', false );
                 $this->SetPoolLightValue( 'Power', false );
                 curl_close( $Curl );
