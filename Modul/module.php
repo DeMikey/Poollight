@@ -104,10 +104,13 @@
  			$this->RegisterVariableBoolean('State', $this->Translate('State'), 'PoolLight.State', $this->_getPosition());
  			$this->RegisterVariableBoolean('Power', $this->Translate('Power'), '~Switch', $this->_getPosition());
 			$this->EnableAction('Power');
+			$this->SetPoolLightValue('Power', false);
 			$this->RegisterVariableInteger('Color', $this->Translate('Color'), 'PoolLight.Color', $this->_getPosition());
 			$this->EnableAction('Color');
+			$this->SetPoolLightValue('Color', $this->ColorNone);
 			$this->RegisterVariableInteger('Scene', $this->Translate('Scene'), 'PoolLight.Scene', $this->_getPosition());
 			$this->EnableAction('Scene');
+			$this->SetPoolLightValue('Scene', $this->SceneNone);
 
 			// receive data only for this instance
 			$this->SetReceiveDataFilter('.*"InstanceID":' . $this->InstanceID . '.*');
@@ -278,6 +281,14 @@
             if (!GetValue($this->GetIDForIdent("State")))
             {
                 $this->SetPoolLightValue( 'Power', true );
+                if (GetValue($this->GetIDForIdent('Color')) < $this->ColorNone)
+                {
+                    $this->SetColor(GetValue($this->GetIDForIdent('Color')));
+                }
+                if (GetValue($this->GetIDForIdent('Scene')) < $this->SceneNone)
+                {
+                    $this->SetScene(GetValue($this->GetIDForIdent('Scene')));
+                }
             }
 			$this->SetPoolLightValue('State', true);
 			return true;
