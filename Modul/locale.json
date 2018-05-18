@@ -2,6 +2,13 @@
 	"translations": {
 		"de": {
 			"Wifi Controler URL": "Wifi Kontroller URL",
+			"Creating instance.": "Erstelle Instanz.",
+			"Url must not empty.": "Url darf nicht leer sein.",
+			"Please follow the instructions.": "Bitte folge den Instruktionen.",
+			"interface closed.": "Interface geschlossen.",
+			"No valid Url.": "Keine gültige Url.",
+			"Pool Light Controler created.": "Pool Licht Kontroller erstellt.",
+			"Connect Controler": "Verbinde Kontroller",
 			"Enter the Wifi Controler Url below.": "Bitte tragen sie die URL des Wifi Controlers ein",
 			"Color": "Farben",
 			"Scene": "Szenen",

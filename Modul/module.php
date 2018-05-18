@@ -430,7 +430,7 @@
 						[
 							'type' => 'Button',
 							'label' => 'Connect Controler',
-							'onClick' => 'HPLC_Connect($id);'
+							'onClick' => 'HPLC_GetState($id);'
 						]
 					];
 			return $form;
@@ -451,7 +451,7 @@
 				[
 					'code' => 102,
 					'icon' => 'active',
-					'caption' => 'Roborock created.'
+					'caption' => 'Pool Light Controler created.'
 				],
 				[
 					'code' => 104,
@@ -466,12 +466,12 @@
 				[
 					'code' => 202,
 					'icon' => 'error',
-					'caption' => 'IP address must not empty.'
+					'caption' => 'Url must not empty.'
 				],
 				[
 					'code' => 203,
 					'icon' => 'error',
-					'caption' => 'No valid IP address.'
+					'caption' => 'No valid Url.'
 				]
 			];
 			return $form;
