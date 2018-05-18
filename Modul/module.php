@@ -218,7 +218,7 @@
 		*/
  		public function SetColor($ColorCode)
 		{
-			$Url = $this->ReadPropertyString('url') . '2.html';
+			$Url = $this->ReadPropertyString('url') . '/2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $ColorCode));
 		  	$Response = $this->httpPost ($Url, $Cmd);
 			$this->_debug('HTTPResponse', $Response);
@@ -231,7 +231,7 @@
 		*/
 		public function SetPower($Power)
 		{
-			$Url = $this->ReadPropertyString('url') . 'HTMCUInfo';
+			$Url = $this->ReadPropertyString('url') . '/HTMCUInfo';
 			if ($Power)
 				{$Cmd = array('B1' => 'Turn on the light');}
 			else
@@ -246,7 +246,7 @@
 		*/
 		public function SetScene($Scene)
 		{
-			$Url = $this->ReadPropertyString('url') . '2.html';
+			$Url = $this->ReadPropertyString('url') . '/2.html';
 			$Cmd = array('B6' => 'Select a show', 'show_type' => sprintf("%'.02d", $Scene));
 			$this->httpPost ($Url, $Cmd);
 		}
@@ -414,9 +414,22 @@
 						[
 							'name' => 'url',
 							'type' => 'ValidationTextBox',
-							'caption' => 'Wifi Controler Url"'
+							'caption' => 'Wifi Controler Url:"'
 						],
 					];
+            $form = array_merge_recursive(
+                $form,
+                [
+                    [
+                        'type' => 'Label',
+                        'label' => 'Update Interval Pool Light State'
+                    ],
+                    [
+                        'name' => 'UpdateInterval',
+                        'type' => 'IntervalBox',
+                        'caption' => 'Seconds'
+                    ]
+                ]);
 			return $form;
 		}
 

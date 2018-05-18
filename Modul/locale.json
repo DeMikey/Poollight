@@ -1,7 +1,9 @@
 {
 	"translations": {
 		"de": {
-			"Wifi Controler URL": "Wifi Kontroller URL",
+			"Wifi Controler Url:": "Wifi Kontroller Url:",
+			"Update Interval Pool Light State": "Aktuallisierungs Intervall des Pool Licht Status",
+			"Seconds": "Sekunden",
 			"Creating instance.": "Erstelle Instanz.",
 			"Url must not empty.": "Url darf nicht leer sein.",
 			"Please follow the instructions.": "Bitte folge den Instruktionen.",
