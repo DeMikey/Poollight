@@ -202,12 +202,14 @@
 		*/
 		private function httpPost($url, $data)
 		{
-			$curl = curl_init($url);
-			curl_setopt($curl, CURLOPT_POST, true);
-			curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			$response = curl_exec($curl);
-			curl_close($curl);
+            $Curl = curl_init($url);
+			curl_setopt($Curl, CURLOPT_POST, true);
+			curl_setopt($Curl, CURLOPT_POSTFIELDS, http_build_query($data));
+			curl_setopt($Curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($Curl, CURLOPT_NOSIGNAL, true);
+            curl_setopt($Curl, CURLOPT_CONNECTTIMEOUT_MS, 200);
+			$response = curl_exec($Curl);
+			curl_close($Curl);
 			return $response;
 		}
 
